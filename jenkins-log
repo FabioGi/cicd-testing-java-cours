@@ -1,0 +1,549 @@
+
+/********* CONNEXION AU REPO GIT DISTANT ***********/
+Branch indexing
+ > git rev-parse --resolve-git-dir /var/jenkins_home/caches/git-a769c0ffab69384dd8456c639e9c7091/.git # timeout=10
+Setting origin to https://github.com/FabioGi/cicd-testing-java-cours.git
+ > git config remote.origin.url https://github.com/FabioGi/cicd-testing-java-cours.git # timeout=10
+Fetching origin...
+Fetching upstream changes from origin
+ > git --version # timeout=10
+ > git --version # 'git version 2.30.2'
+ > git config --get remote.origin.url # timeout=10
+using GIT_ASKPASS to set credentials Git hub
+ > git fetch --tags --force --progress -- origin +refs/heads/*:refs/remotes/origin/* # timeout=10
+Seen branch in repository origin/m1ch1
+Seen branch in repository origin/m1ch1_OK
+Seen branch in repository origin/m1ch2
+Seen branch in repository origin/m1ch2_OK
+Seen branch in repository origin/m1ch3
+Seen branch in repository origin/m1ch3_OK
+Seen branch in repository origin/m2ch4
+Seen branch in repository origin/m2ch4_OK
+Seen branch in repository origin/m2ch6_1
+Seen branch in repository origin/m2ch6_2
+Seen branch in repository origin/m2ch6_3
+Seen branch in repository origin/m2ch6_OK
+Seen branch in repository origin/main
+Seen branch in repository origin/ready
+Seen 14 remote branches
+/****************** RECUPERATION DU FICHIER JENKINS *******************/
+
+Obtained Jenkinsfile from aa543bf52ab429f117d9476f71cd22e0a16499c5
+
+/************************ DEBUT DU LANCEMENT DU PIPELINE **************/
+[Pipeline] Start of Pipeline
+[Pipeline] node
+/*********************** DEMARRAGE DE JENKINS DANS LE VOLUME LOCAL *******************/
+Running on Jenkins in /var/jenkins_home/workspace/calculator_m2ch4_OK
+[Pipeline] {
+
+/********************** STAGE 1: INITIALISATION DE MAVEN ET DOCKER **********************/
+stage('Initialize') {
+            def dockerHome = tool 'DockerLatest'
+            def mavenHome = tool 'MavenLatest'
+            env.PATH = "${dockerHome}/bin:${mavenHome}/bin:${env.PATH}"
+        }
+// ça permet d'executer mvn et docker en commande peut importe ou l'on se situe //
+[Pipeline] stage
+[Pipeline] { (Initialize)
+[Pipeline] tool
+[Pipeline] tool
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+/************************ STAGE 2: CHECKOUT ************************************/
+ stage('Checkout') {
+            checkout scm
+        }
+[Pipeline] { (Checkout)
+[Pipeline] checkout
+Selected Git installation does not exist. Using Default
+The recommended git tool is: NONE
+using credential GithubCredentials
+Cloning the remote Git repository
+Cloning with configured refspecs honoured and without tags
+Cloning repository https://github.com/FabioGi/cicd-testing-java-cours.git
+ > git init /var/jenkins_home/workspace/calculator_m2ch4_OK # timeout=10
+Fetching upstream changes from https://github.com/FabioGi/cicd-testing-java-cours.git
+ > git --version # timeout=10
+ > git --version # 'git version 2.30.2'
+using GIT_ASKPASS to set credentials Git hub
+ > git fetch --no-tags --force --progress -- https://github.com/FabioGi/cicd-testing-java-cours.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+ > git config remote.origin.url https://github.com/FabioGi/cicd-testing-java-cours.git # timeout=10
+ > git config --add remote.origin.fetch +refs/heads/*:refs/remotes/origin/* # timeout=10
+Avoid second fetch
+Checking out Revision aa543bf52ab429f117d9476f71cd22e0a16499c5 (m2ch4_OK)
+ > git config core.sparsecheckout # timeout=10
+ > git checkout -f aa543bf52ab429f117d9476f71cd22e0a16499c5 # timeout=10
+Commit message: "update Jenkinsfile"
+ > git rev-list --no-walk 7e10ecc6fe8e5bf3dbb0d53bb55f699cb23dd23d # timeout=10
+First time build. Skipping changelog.
+[Pipeline] }
+[Pipeline] // stage
+/******************************** STAGE 3: BUILD ET TEST ***********************************/
+ stage('Build with test') {
+
+            sh "mvn clean install"
+        }
+
+[Pipeline] stage
+[Pipeline] { (Build with test)
+[Pipeline] sh
++ mvn clean install
+[INFO] Scanning for projects...
+[INFO]
+[INFO] -----------------< tech.zerofiltre.testing:calculator >-----------------
+[INFO] Building calculator 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- clean:3.1.0:clean (default-clean) @ calculator ---
+[INFO]
+[INFO] --- jacoco:0.8.2:prepare-agent (default) @ calculator ---
+[INFO] argLine set to -javaagent:/root/.m2/repository/org/jacoco/org.jacoco.agent/0.8.2/org.jacoco.agent-0.8.2-runtime.jar=destfile=/var/jenkins_home/workspace/calculator_m2ch4_OK/target/jacoco.exec
+[INFO]
+[INFO] --- resources:3.1.0:resources (default-resources) @ calculator ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 3 resources
+[INFO] Copying 1 resource
+[INFO]
+[INFO] --- compiler:3.8.1:compile (default-compile) @ calculator ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 16 source files to /var/jenkins_home/workspace/calculator_m2ch4_OK/target/classes
+[INFO]
+[INFO] --- resources:3.1.0:testResources (default-testResources) @ calculator ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 3 resources
+[INFO]
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ calculator ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 11 source files to /var/jenkins_home/workspace/calculator_m2ch4_OK/target/test-classes
+[INFO]
+[INFO] --- surefire:2.22.2:test (default-test) @ calculator ---
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running tech.zerofiltre.testing.calcul.service.CalculatorServiceTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.274 s - in tech.zerofiltre.testing.calcul.service.CalculatorServiceTest
+[INFO] Running tech.zerofiltre.testing.calcul.service.BatchCalculatorServiceTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.126 s - in tech.zerofiltre.testing.calcul.service.BatchCalculatorServiceTest
+[INFO] Running tech.zerofiltre.testing.calcul.service.SolutionFormatterTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s - in tech.zerofiltre.testing.calcul.service.SolutionFormatterTest
+[INFO] Running tech.zerofiltre.testing.calcul.domain.ConversionCalculatorTest
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.011 s - in tech.zerofiltre.testing.calcul.domain.ConversionCalculatorTest
+[INFO] Running tech.zerofiltre.testing.calcul.domain.CalculatorTest
+Appel avant tous les tests
+2023-02-09 13:55:57.974  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:58.004  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:58.209  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:58.340  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:58.345  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:58.356  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:58.363  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:58.375  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:58.382  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:58.393  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:58.414  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:58.416  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:58.431  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:58.456  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:58.464  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:58.979  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:58.982  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:58.983  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:58.986  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:58.991  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:58.994  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:58.995  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:59.009  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:59.013  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:59.023  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:59.028  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:59.034  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:59.037  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:59.047  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:59.050  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:59.056  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:59.058  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+2023-02-09 13:55:59.062  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel avant chaque test
+2023-02-09 13:55:59.063  INFO   --- [           main] t.z.t.calcul.domain.CalculatorTest       : Appel après chaque test
+Appel après tous les tests
+Durée des tests : 1,365 ms
+[WARNING] Tests run: 18, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 1.385 s - in tech.zerofiltre.testing.calcul.domain.CalculatorTest
+[INFO] Running tech.zerofiltre.testing.calcul.domain.StatisticsCalculatorTest
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.106 s - in tech.zerofiltre.testing.calcul.domain.StatisticsCalculatorTest
+[INFO] Running tech.zerofiltre.testing.calcul.domain.DoubleCalculatorTest
+[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0.002 s - in tech.zerofiltre.testing.calcul.domain.DoubleCalculatorTest
+[INFO]
+[INFO] Results:
+[INFO]
+[WARNING] Tests run: 37, Failures: 0, Errors: 0, Skipped: 2
+[INFO]
+[INFO]
+[INFO] --- jacoco:0.8.2:report (report) @ calculator ---
+[INFO] Loading execution data file /var/jenkins_home/workspace/calculator_m2ch4_OK/target/jacoco.exec
+[INFO] Analyzed bundle 'calculator' with 12 classes
+[INFO]
+[INFO] --- jar:3.1.2:jar (default-jar) @ calculator ---
+[INFO] Building jar: /var/jenkins_home/workspace/calculator_m2ch4_OK/target/calculator.jar
+[INFO]
+[INFO] --- spring-boot:2.2.0.RELEASE:repackage (repackage) @ calculator ---
+[INFO] Replacing main artifact with repackaged archive
+[INFO]
+[INFO] --- failsafe:2.22.2:integration-test (default) @ calculator ---
+[INFO]
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running tech.zerofiltre.testing.calcul.service.CalculatorServiceIT
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.084 s - in tech.zerofiltre.testing.calcul.service.CalculatorServiceIT
+[INFO] Running tech.zerofiltre.testing.calcul.controller.CalculatorControllerSIT
+2023-02-09 13:56:07.315  INFO   --- [           main] .b.t.a.w.s.WebMvcTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [tech.zerofiltre.testing.calcul.controller.CalculatorControllerSIT], using SpringBootContextLoader
+2023-02-09 13:56:07.365  INFO   --- [           main] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [tech.zerofiltre.testing.calcul.controller.CalculatorControllerSIT]: no resource found for suffixes {-context.xml, Context.groovy}.
+2023-02-09 13:56:07.374  INFO   --- [           main] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [tech.zerofiltre.testing.calcul.controller.CalculatorControllerSIT]: CalculatorControllerSIT does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2023-02-09 13:56:08.059  INFO   --- [           main] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration tech.zerofiltre.testing.calcul.CalculatorApp for test class tech.zerofiltre.testing.calcul.controller.CalculatorControllerSIT
+2023-02-09 13:56:08.067  INFO   --- [           main] .b.t.a.w.s.WebMvcTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2023-02-09 13:56:08.104  INFO   --- [           main] .b.t.a.w.s.WebMvcTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@79c849c7, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@35840ecc, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@67fd2e17, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@65a2e14e, org.springframework.test.context.support.DirtiesContextTestExecutionListener@5e9f1a4c, org.springframework.test.context.event.EventPublishingTestExecutionListener@4bf89d3d, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@457b8fc3, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@37a1beb3, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@11ca8f71, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@1e54e900, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@7c8689e]
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.2.0.RELEASE)
+
+2023-02-09 13:56:09.625  INFO 21555 --- [           main] t.z.t.c.c.CalculatorControllerSIT        : Starting CalculatorControllerSIT on 4cf48983daa5 with PID 21555 (started by root in /var/jenkins_home/workspace/calculator_m2ch4_OK)
+2023-02-09 13:56:09.644  INFO 21555 --- [           main] t.z.t.c.c.CalculatorControllerSIT        : No active profile set, falling back to default profiles: default
+2023-02-09 13:56:14.730  INFO 21555 --- [           main] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2023-02-09 13:56:15.796  INFO 21555 --- [           main] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2023-02-09 13:56:15.798  INFO 21555 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2023-02-09 13:56:15.870  INFO 21555 --- [           main] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 60 ms
+2023-02-09 13:56:15.964  INFO 21555 --- [           main] t.z.t.c.c.CalculatorControllerSIT        : Started CalculatorControllerSIT in 7.4 seconds (JVM running for 13.262)
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.908 s - in tech.zerofiltre.testing.calcul.controller.CalculatorControllerSIT
+2023-02-09 13:56:17.691  INFO 21555 --- [extShutdownHook] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+[INFO]
+[INFO] Results:
+[INFO]
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0
+[INFO]
+[INFO]
+[INFO] --- failsafe:2.22.2:verify (default) @ calculator ---
+[INFO]
+[INFO] --- install:2.5.2:install (default-install) @ calculator ---
+[INFO] Installing /var/jenkins_home/workspace/calculator_m2ch4_OK/target/calculator.jar to /root/.m2/repository/tech/zerofiltre/testing/calculator/0.0.1-SNAPSHOT/calculator-0.0.1-SNAPSHOT.jar
+[INFO] Installing /var/jenkins_home/workspace/calculator_m2ch4_OK/pom.xml to /root/.m2/repository/tech/zerofiltre/testing/calculator/0.0.1-SNAPSHOT/calculator-0.0.1-SNAPSHOT.pom
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  41.782 s
+[INFO] Finished at: 2023-02-09T13:56:19Z
+[INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+/********************************** STAGE 4: ANALYSE DE SONAR ***************************************/
+
+    withSonarQubeEnv('SonarQubeLocalServer') {
+                sh " mvn sonar:sonar -Dintegration-tests.skip=true -Dmaven.test.failure.ignore=true"
+            }
+            timeout(time: 1, unit: 'MINUTES') {
+                def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+                if (qg.status != 'OK') {
+                    error "Pipeline aborted due to quality gate failure: ${qg.status}"
+                }
+            }
+        }
+
+[Pipeline] { (Sonarqube Analysis)
+[Pipeline] withSonarQubeEnv
+Injecting SonarQube environment variables using the configuration: SonarQubeLocalServer
+[Pipeline] {
+[Pipeline] sh
++ mvn sonar:sonar -Dintegration-tests.skip=true -Dmaven.test.failure.ignore=true
+[INFO] Scanning for projects...
+[WARNING] The artifact org.codehaus.mojo:sonar-maven-plugin:jar:3.9.1.2184 has been relocated to org.sonarsource.scanner.maven:sonar-maven-plugin:jar:3.9.1.2184: SonarQube plugin was moved to SonarSource organisation
+[INFO]
+[INFO] -----------------< tech.zerofiltre.testing:calculator >-----------------
+[INFO] Building calculator 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO]
+[INFO] --- sonar:3.9.1.2184:sonar (default-cli) @ calculator ---
+[INFO] User cache: /root/.sonar/cache
+[INFO] SonarQube version: 9.9.0.65466
+[INFO] Default locale: "en", source code encoding: "UTF-8"
+[INFO] Load global settings
+[INFO] Load global settings (done) | time=254ms
+[INFO] Server id: 147B411E-AYYnWawTYq7i6vCgIv8B
+[INFO] User cache: /root/.sonar/cache
+[INFO] Load/download plugins
+[INFO] Load plugins index
+[INFO] Load plugins index (done) | time=242ms
+[INFO] Load/download plugins (done) | time=457ms
+[INFO] Process project properties
+[INFO] Process project properties (done) | time=33ms
+[INFO] Execute project builders
+[INFO] Execute project builders (done) | time=2ms
+[INFO] Project key: tech.zerofiltre.testing:calculator
+[INFO] Base dir: /var/jenkins_home/workspace/calculator_m2ch4_OK
+[INFO] Working dir: /var/jenkins_home/workspace/calculator_m2ch4_OK/target/sonar
+[INFO] Load project settings for component key: 'tech.zerofiltre.testing:calculator'
+[INFO] Load project settings for component key: 'tech.zerofiltre.testing:calculator' (done) | time=36ms
+[INFO] Auto-configuring with CI 'Jenkins'
+[INFO] Load quality profiles
+[INFO] Load quality profiles (done) | time=105ms
+[INFO] Load active rules
+[INFO] Load active rules (done) | time=3565ms
+[INFO] Load analysis cache
+[INFO] Load analysis cache (513 bytes) | time=37ms
+[INFO] Load project repositories
+[INFO] Load project repositories (done) | time=55ms
+[INFO] Indexing files...
+[INFO] Project configuration:
+[INFO] 28 files indexed
+[INFO] 0 files ignored because of scm ignore settings
+[INFO] Quality profile for java: Sonar way
+[INFO] Quality profile for xml: Sonar way
+[INFO] ------------- Run sensors on module calculator
+[INFO] Load metrics repository
+[INFO] Load metrics repository (done) | time=78ms
+[INFO] Sensor JavaSensor [java]
+[INFO] Configured Java source version (sonar.java.source): 11
+[INFO] JavaClasspath initialization
+[INFO] JavaClasspath initialization (done) | time=34ms
+[INFO] JavaTestClasspath initialization
+[INFO] JavaTestClasspath initialization (done) | time=34ms
+[INFO] Server-side caching is enabled. The Java analyzer will not try to leverage data from a previous analysis.
+[INFO] Using ECJ batch to parse 16 Main java source files with batch size 156 KB.
+[INFO] Starting batch processing.
+[INFO] The Java analyzer cannot skip unchanged files in this context. A full analysis is performed for all files.
+[INFO] 100% analyzed
+[INFO] Batch processing: Done.
+[INFO] Did not optimize analysis for any files, performed a full analysis for all 16 files.
+[INFO] Using ECJ batch to parse 11 Test java source files with batch size 156 KB.
+[INFO] Starting batch processing.
+[INFO] 100% analyzed
+[INFO] Batch processing: Done.
+[INFO] Did not optimize analysis for any files, performed a full analysis for all 11 files.
+[INFO] No "Generated" source files to scan.
+[INFO] Sensor JavaSensor [java] (done) | time=7089ms
+[INFO] Sensor JaCoCo XML Report Importer [jacoco]
+[INFO] 'sonar.coverage.jacoco.xmlReportPaths' is not defined. Using default locations: target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml,build/reports/jacoco/test/jacocoTestReport.xml
+[INFO] Importing 1 report(s). Turn your logs in debug mode in order to see the exhaustive list.
+[INFO] Sensor JaCoCo XML Report Importer [jacoco] (done) | time=95ms
+[INFO] Sensor CSS Rules [javascript]
+[INFO] No CSS, PHP, HTML or VueJS files are found in the project. CSS analysis is skipped.
+[INFO] Sensor CSS Rules [javascript] (done) | time=5ms
+[INFO] Sensor C# Project Type Information [csharp]
+[INFO] Sensor C# Project Type Information [csharp] (done) | time=1ms
+[INFO] Sensor C# Analysis Log [csharp]
+[INFO] Sensor C# Analysis Log [csharp] (done) | time=60ms
+[INFO] Sensor C# Properties [csharp]
+[INFO] Sensor C# Properties [csharp] (done) | time=1ms
+[INFO] Sensor SurefireSensor [java]
+[INFO] parsing [/var/jenkins_home/workspace/calculator_m2ch4_OK/target/surefire-reports]
+[INFO] Sensor SurefireSensor [java] (done) | time=306ms
+[INFO] Sensor HTML [web]
+[INFO] Sensor HTML [web] (done) | time=4ms
+[INFO] Sensor XML Sensor [xml]
+[INFO] 1 source file to be analyzed
+[INFO] 1/1 source file has been analyzed
+[INFO] Sensor XML Sensor [xml] (done) | time=446ms
+[INFO] Sensor TextAndSecretsSensor [text]
+[INFO] 28 source files to be analyzed
+[INFO] 28/28 source files have been analyzed
+[INFO] Sensor TextAndSecretsSensor [text] (done) | time=235ms
+[INFO] Sensor VB.NET Project Type Information [vbnet]
+[INFO] Sensor VB.NET Project Type Information [vbnet] (done) | time=4ms
+[INFO] Sensor VB.NET Analysis Log [vbnet]
+[INFO] Sensor VB.NET Analysis Log [vbnet] (done) | time=34ms
+[INFO] Sensor VB.NET Properties [vbnet]
+[INFO] Sensor VB.NET Properties [vbnet] (done) | time=1ms
+[INFO] Sensor IaC Docker Sensor [iac]
+[INFO] 0 source files to be analyzed
+[INFO] 0/0 source files have been analyzed
+[INFO] Sensor IaC Docker Sensor [iac] (done) | time=217ms
+[INFO] ------------- Run sensors on project
+[INFO] Sensor Analysis Warnings import [csharp]
+[INFO] Sensor Analysis Warnings import [csharp] (done) | time=2ms
+[INFO] Sensor Zero Coverage Sensor
+[INFO] Sensor Zero Coverage Sensor (done) | time=4ms
+[INFO] Sensor Java CPD Block Indexer
+[INFO] Sensor Java CPD Block Indexer (done) | time=73ms
+[INFO] CPD Executor 9 files had no CPD blocks
+[INFO] CPD Executor Calculating CPD for 7 files
+[INFO] CPD Executor CPD calculation finished (done) | time=25ms
+[INFO] Analysis report generated in 210ms, dir size=210.9 kB
+[INFO] Analysis report compressed in 179ms, zip size=75.1 kB
+[INFO] Analysis report uploaded in 80ms
+[INFO] ANALYSIS SUCCESSFUL, you can find the results at: http://172.17.0.1:9000/dashboard?id=tech.zerofiltre.testing%3Acalculator
+[INFO] Note that you will be able to access the updated dashboard once the server has processed the submitted analysis report
+[INFO] More about the report processing at http://172.17.0.1:9000/api/ce/task?id=AYY2dvuOMliOR0pgk038
+[INFO] Analysis total time: 20.630 s
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  27.858 s
+[INFO] Finished at: 2023-02-09T13:56:52Z
+[INFO] ------------------------------------------------------------------------
+[Pipeline] }
+[Pipeline] // withSonarQubeEnv
+[Pipeline] timeout
+Timeout set to expire in 1 min 0 sec
+[Pipeline] {
+[Pipeline] waitForQualityGate
+Checking status of SonarQube task 'AYY2dvuOMliOR0pgk038' on server 'SonarQubeLocalServer'
+SonarQube task 'AYY2dvuOMliOR0pgk038' status is 'PENDING'
+SonarQube task 'AYY2dvuOMliOR0pgk038' status is 'SUCCESS'
+SonarQube task 'AYY2dvuOMliOR0pgk038' completed. Quality gate is 'OK'
+[Pipeline] }
+[Pipeline] // timeout
+[Pipeline] }
+[Pipeline] // stage
+/**************************** STAGE 5: Suppressions de toutes les images existantes pour liberer l'espace *********************/
+ stage("Image Prune") {
+             try {
+                    sh "docker image prune -f"
+                    sh "docker stop $containerName"
+                } catch (ignored) {
+                }
+        }
+[Pipeline] stage
+[Pipeline] { (Image Prune)
+[Pipeline] sh
++ docker image prune -f
+Total reclaimed space: 0B
+[Pipeline] sh
++ docker stop calculator-dev
+Error response from daemon: No such container: calculator-dev
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Image Build)
+[Pipeline] sh
+
+/*************************** STAGE 6:  BUILD DE L'IMAGE ********************************/
+
+stage('Image Build') {
+            sh "docker build -t $containerName:$tag --pull --no-cache ."
+            echo "Image build complete"
+        }
++ docker build -t calculator-dev:11-stable --pull --no-cache .
+Sending build context to Docker daemon  34.51MB
+
+Step 1/7 : FROM adoptopenjdk/openjdk11:alpine-jre
+alpine-jre: Pulling from adoptopenjdk/openjdk11
+Digest: sha256:81762bad162db816bdc0ed0c2b288b724882b0a8e28fac761142104ffd0be8f8
+Status: Image is up to date for adoptopenjdk/openjdk11:alpine-jre
+ ---> e21722b88970
+Step 2/7 : ARG JAR_FILE=target/calculator.jar
+ ---> Running in f052a6464c37
+Removing intermediate container f052a6464c37
+ ---> 0ce219fc84a4
+Step 3/7 : WORKDIR /opt/app
+ ---> Running in 8d121427755e
+Removing intermediate container 8d121427755e
+ ---> 2ad0f65d871a
+Step 4/7 : COPY ${JAR_FILE} calculator.jar
+ ---> 8663711e6b51
+Step 5/7 : COPY entrypoint.sh entrypoint.sh
+ ---> 66387f6f312a
+Step 6/7 : RUN chmod 755 entrypoint.sh
+ ---> Running in a3376401c0c7
+Removing intermediate container a3376401c0c7
+ ---> 08656a2caf38
+Step 7/7 : ENTRYPOINT ["./entrypoint.sh"]
+ ---> Running in ac8a16c0c7af
+Removing intermediate container ac8a16c0c7af
+ ---> 233aa407a9ae
+Successfully built 233aa407a9ae
+Successfully tagged calculator-dev:11-stable
+[Pipeline] echo
+Image build complete
+[Pipeline] }
+[Pipeline] // stage
+
+/*********************************** STAGE 7: PUSH DOCKER IMAGE SUR LE HUB **********************************/
+stage('Push to Docker Registry') {
+            withCredentials([usernamePassword(credentialsId: 'DockerhubCredentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                sh "docker login -u $dockerUser -p $dockerPassword"
+                    sh "docker tag $containerName:$tag $dockerUser/$containerName:$tag"
+                    sh "docker push $dockerUser/$containerName:$tag"
+                    echo "Image push complete"
+            }
+        }
+[Pipeline] stage
+[Pipeline] { (Push to Docker Registry)
+[Pipeline] withCredentials
+Masking supported pattern matches of $PASSWORD
+[Pipeline] {
+[Pipeline] sh
+Warning: A secret was passed to "sh" using Groovy String interpolation, which is insecure.
+		 Affected argument(s) used the following variable(s): [PASSWORD]
+		 See https://jenkins.io/redirect/groovy-string-interpolation for details.
++ docker login -u hfkadio -p ****
+Login Succeeded
+[Pipeline] sh
++ docker tag calculator-dev:11-stable hfkadio/calculator-dev:11-stable
+[Pipeline] sh
++ docker push hfkadio/calculator-dev:11-stable
+The push refers to repository [docker.io/hfkadio/calculator-dev]
+d49a2aaf0e7c: Preparing
+3e0e6408774a: Preparing
+f734d5ab692f: Preparing
+9ada931c119a: Preparing
+120bd3130ab5: Preparing
+ebc817565aa6: Preparing
+63493a9ab2d4: Preparing
+63493a9ab2d4: Waiting
+ebc817565aa6: Waiting
+120bd3130ab5: Layer already exists
+ebc817565aa6: Layer already exists
+63493a9ab2d4: Layer already exists
+9ada931c119a: Pushed
+d49a2aaf0e7c: Pushed
+3e0e6408774a: Pushed
+f734d5ab692f: Pushed
+11-stable: digest: sha256:3b3c42e61b7feeb870a23f9fb2316897561fb307577887c694a7a47fbda4b730 size: 1784
+[Pipeline] echo
+Image push complete
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+/*********************************** STAGE: 8 DEMARRAGE DU CONTAINER ******************************************/
+ stage('Run App') {
+            withCredentials([usernamePassword(credentialsId: 'DockerhubCredentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh "docker pull $dockerHubUser/$containerName:$tag"
+                    sh "docker run --rm --env SPRING_ACTIVE_PROFILES=$envName -d -p $httpPort:$httpPort --name $containerName $dockerHubUser/$containerName:$tag"
+                    echo "Application started on port: ${httpPort} (http)"
+
+            }
+        }
+
+[Pipeline] stage
+[Pipeline] { (Run App)
+[Pipeline] withCredentials
+Masking supported pattern matches of $PASSWORD
+[Pipeline] {
+[Pipeline] sh
++ docker pull hfkadio/calculator-dev:11-stable
+11-stable: Pulling from hfkadio/calculator-dev
+Digest: sha256:3b3c42e61b7feeb870a23f9fb2316897561fb307577887c694a7a47fbda4b730
+Status: Image is up to date for hfkadio/calculator-dev:11-stable
+[Pipeline] sh
++ docker run --rm --env SPRING_ACTIVE_PROFILES=dev -d -p 9001:9001 --name calculator-dev hfkadio/calculator-dev:11-stable
+393e803530348f8f770e25f1aa5151d2d344b1a34a5457e26265bea574a19a65
+[Pipeline] echo
+Application started on port: 9001 (http)
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] deleteDir
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
